@@ -1,15 +1,25 @@
-import { type ActionFunctionArgs } from '@remix-run/cloudflare';
+import { type ActionFunctionArgs, type LoaderFunctionArgs } from '@remix-run/cloudflare';
 import { MAX_RESPONSE_SEGMENTS, MAX_TOKENS } from '~/lib/.server/llm/constants';
 import { CONTINUE_PROMPT } from '~/lib/.server/llm/prompts';
 import { streamText, type Messages, type StreamingOptions } from '~/lib/.server/llm/stream-text';
+import type { Provider } from '~/lib/.server/llm/api-key';
 import SwitchableStream from '~/lib/.server/llm/switchable-stream';
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  return new Response('Chat API endpoint - use POST to send messages', {
+    status: 200,
+    headers: {
+      'Content-Type': 'text/plain',
+    },
+  });
+}
 
 export async function action(args: ActionFunctionArgs) {
   return chatAction(args);
 }
 
 async function chatAction({ context, request }: ActionFunctionArgs) {
-  const { messages } = await request.json<{ messages: Messages }>();
+  const { messages, provider = 'anthropic' } = await request.json<{ messages: Messages; provider?: Provider }>();
 
   const stream = new SwitchableStream();
 
@@ -32,13 +42,13 @@ async function chatAction({ context, request }: ActionFunctionArgs) {
         messages.push({ role: 'assistant', content });
         messages.push({ role: 'user', content: CONTINUE_PROMPT });
 
-        const result = await streamText(messages, context.cloudflare.env, options);
+        const result = await streamText(messages, context.cloudflare.env, options, provider);
 
         return stream.switchSource(result.toAIStream());
       },
     };
 
-    const result = await streamText(messages, context.cloudflare.env, options);
+    const result = await streamText(messages, context.cloudflare.env, options, provider);
 
     stream.switchSource(result.toAIStream());
 

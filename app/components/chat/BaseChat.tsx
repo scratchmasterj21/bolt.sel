@@ -6,6 +6,7 @@ import { IconButton } from '~/components/ui/IconButton';
 import { Workbench } from '~/components/workbench/Workbench.client';
 import { classNames } from '~/utils/classNames';
 import { Messages } from './Messages.client';
+import { ProviderSelector } from './ProviderSelector';
 import { SendButton } from './SendButton.client';
 
 import styles from './BaseChat.module.scss';
@@ -103,6 +104,11 @@ export const BaseChat = React.forwardRef<HTMLDivElement, BaseChatProps>(
                   'sticky bottom-0': chatStarted,
                 })}
               >
+                {chatStarted && (
+                  <div className="mb-3">
+                    <ProviderSelector />
+                  </div>
+                )}
                 <div
                   className={classNames(
                     'shadow-sm border border-bolt-elements-borderColor bg-bolt-elements-prompt-background backdrop-filter backdrop-blur-[8px] rounded-lg overflow-hidden',
