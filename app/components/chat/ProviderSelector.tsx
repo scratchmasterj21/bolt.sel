@@ -3,8 +3,8 @@ import { atom } from 'nanostores';
 import { useCallback } from 'react';
 import type { Provider } from '~/lib/.server/llm/api-key';
 
-// Store for the selected provider
-export const providerStore = atom<Provider>('anthropic');
+// Store for the selected provider - default to Google Gemini
+export const providerStore = atom<Provider>('google');
 
 interface ProviderOption {
   id: Provider;
@@ -15,16 +15,16 @@ interface ProviderOption {
 
 const PROVIDERS: ProviderOption[] = [
   {
+    id: 'google',
+    name: 'Gemini 2.5 Flash Lite',
+    description: 'Google\'s cost-efficient model (Default)',
+    icon: 'i-ph:sparkle-bold',
+  },
+  {
     id: 'anthropic',
     name: 'Claude 3.5 Sonnet',
     description: 'Anthropic\'s most capable model',
     icon: 'i-ph:robot-bold',
-  },
-  {
-    id: 'google',
-    name: 'Gemini 2.5 Flash Lite',
-    description: 'Google\'s cost-efficient model',
-    icon: 'i-ph:sparkle-bold',
   },
 ];
 

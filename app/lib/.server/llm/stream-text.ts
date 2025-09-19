@@ -9,7 +9,7 @@ export type Messages = Message[];
 
 export type StreamingOptions = Omit<Parameters<typeof _streamText>[0], 'model'>;
 
-export function streamText(messages: Messages, env: Env, options?: StreamingOptions, provider: Provider = 'anthropic') {
+export function streamText(messages: Messages, env: Env, options?: StreamingOptions, provider: Provider = 'google') {
   const apiKey = getAPIKey(env, provider);
   
   if (provider === 'google') {

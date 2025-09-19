@@ -19,7 +19,7 @@ export async function action(args: ActionFunctionArgs) {
 }
 
 async function chatAction({ context, request }: ActionFunctionArgs) {
-  const { messages, provider = 'anthropic' } = await request.json<{ messages: Messages; provider?: Provider }>();
+  const { messages, provider = 'google' } = await request.json<{ messages: Messages; provider?: Provider }>();
 
   const stream = new SwitchableStream();
 
